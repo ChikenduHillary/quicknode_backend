@@ -3,13 +3,14 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const socketIO = require("socket.io");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
 const corsOptions = {
-  origin: "https://quicknode-streams.vercel.app/",
+  origin: "",
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
 };
@@ -19,13 +20,19 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Example of processing function
 function processData(message) {
   // Decompress and convert message to JSON
   // Return processed data
 
   return message;
 }
+
+app.use(express.static(path.join(__dirname, "dist")));
+
+// Catch-all route to serve the React app
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.post("/webhook", (req, res) => {
   message = req.body;
