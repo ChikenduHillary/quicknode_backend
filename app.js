@@ -8,7 +8,13 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://quicknode-streams.vercel.app/",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
