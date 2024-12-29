@@ -29,6 +29,15 @@ function processData(message) {
 
 app.use(express.static(path.join(__dirname, "dist")));
 
+app.use(
+  express.static(path.join(__dirname, "assets"), {
+    setHeaders: (res, path) => {
+      if (path.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      }
+    },
+  })
+);
 // Catch-all route to serve the React app
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
